@@ -1,12 +1,14 @@
-import React from 'react';
-import { ArrowDown, WifiOff } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowDown, WifiOff, Server } from 'lucide-react';
 import { useChatStore } from '../store/chatStore';
 import { useAutoScroll } from '../hooks/useAutoScroll';
+import { getApiBaseUrl } from '../services/api';
 import { MessageBubble } from './MessageBubble';
 import { AIOrb3D } from './AIOrb3D';
 import { SuggestionCards } from './SuggestionCards';
 import { ThinkingDots } from './ThinkingDots';
 import { OrbAvatar } from './OrbAvatar';
+import { BackendSettingsModal } from './BackendSettingsModal';
 
 export function ChatWindow() {
   const messages = useChatStore((state) => state.messages);
@@ -15,14 +17,32 @@ export function ChatWindow() {
   const streamingContent = useChatStore((state) => state.streamingContent);
   const streamingSources = useChatStore((state) => state.streamingSources);
   const isOffline = useChatStore((state) => state.isOffline);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const scrollTrigger = `${messages.length}-${streamingContent.length}-${isThinking}`;
   const { containerRef, showScrollBottom, scrollToBottom, handleScroll } = useAutoScroll(scrollTrigger);
 
   const isEmpty = messages.length === 0 && !isStreaming;
+  const hasBackend = Boolean(getApiBaseUrl());
 
   return (
     <div className="flex-1 relative overflow-hidden flex flex-col">
+      {/* Backend Setup Banner (only shown if no backend is set) */}
+      {!hasBackend && (
+        <div className="bg-blue-500/10 border-b border-blue-500/20 text-accent-blue px-4 py-2 text-xs flex items-center justify-between select-none">
+          <div className="flex items-center space-x-2">
+            <Server className="w-3.5 h-3.5 flex-shrink-0" />
+            <span>Connect your Render Backend URL to enable AI responses & database history.</span>
+          </div>
+          <button
+            onClick={() => setShowSettingsModal(true)}
+            className="underline font-medium hover:text-white transition-colors ml-2 flex-shrink-0"
+          >
+            Configure URL
+          </button>
+        </div>
+      )}
+
       {/* Offline Alert Banner */}
       {isOffline && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 text-amber-500 px-4 py-1.5 text-xs flex items-center justify-center space-x-2 select-none">
@@ -94,6 +114,12 @@ export function ChatWindow() {
           <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
         </button>
       )}
+
+      {/* Backend Settings Modal */}
+      <BackendSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+      />
     </div>
   );
 }

@@ -1,7 +1,4 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL ||
-  (typeof window !== 'undefined' && window.__BACKEND_URL__) ||
-  (import.meta.env.DEV ? 'http://localhost:5000' : '');
+import { getApiBaseUrl } from './api';
 
 /**
  * Parses and streams Server-Sent Events (SSE) from the FastAPI backend.
@@ -17,6 +14,13 @@ export async function streamChat({
   onDone,
   onError,
 }) {
+  const baseUrl = getApiBaseUrl();
+  if (!baseUrl) {
+    const err = new Error('Backend URL is not configured. Please click "Backend API" in the top bar to set your backend URL.');
+    onError?.(err);
+    throw err;
+  }
+
   const formData = new FormData();
   formData.append('message', message);
   if (conversationId) {
@@ -27,7 +31,7 @@ export async function streamChat({
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/chat`, {
+    const response = await fetch(`${baseUrl}/api/chat`, {
       method: 'POST',
       body: formData,
       signal,
@@ -67,8 +71,9 @@ export async function streamRegenerate({
   onDone,
   onError,
 }) {
+  const baseUrl = getApiBaseUrl();
   try {
-    const response = await fetch(`${API_BASE_URL}/api/chat/${conversationId}/regenerate`, {
+    const response = await fetch(`${baseUrl}/api/chat/${conversationId}/regenerate`, {
       method: 'POST',
       signal,
     });

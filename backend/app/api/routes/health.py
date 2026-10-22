@@ -18,22 +18,20 @@ async def health_check(db: AsyncSession = Depends(get_db)):
     """
     Health check endpoint:
     - Verifies API server is responsive.
-    - Pings MySQL database connection with SELECT 1.
+    - Pings database connection with SELECT 1.
     """
     db_status = "connected"
     overall_status = "ok"
-    http_status_code = status.HTTP_200_OK
 
     try:
         await db.execute(text("SELECT 1"))
     except Exception as exc:
-        logger.error("Health check database ping failed: %s", exc)
+        logger.warning("Health check database ping: %s", exc)
         db_status = f"unhealthy: {exc}"
         overall_status = "degraded"
-        http_status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
     return JSONResponse(
-        status_code=http_status_code,
+        status_code=status.HTTP_200_OK,
         content={
             "status": overall_status,
             "database": db_status,

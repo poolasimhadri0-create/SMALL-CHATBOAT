@@ -29,6 +29,16 @@ async def lifespan(app: FastAPI):
     # Ensure upload directory exists
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
+    # Ensure database schema is created
+    try:
+        from app.core.database import Base
+        import app.models
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database schema initialized.")
+    except Exception as db_init_err:
+        logger.warning("Database schema auto-creation deferred: %s", db_init_err)
+
     # Pre-warm Gemini GenAI client
     try:
         from app.services.gemini_service import gemini_service

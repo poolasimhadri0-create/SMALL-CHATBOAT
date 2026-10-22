@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-3.5-flash-lite"
     ENABLE_SEARCH_GROUNDING: bool = False
 
-    # Database
-    DATABASE_URL: str = "mysql+aiomysql://root:password@localhost:3306/gemini_chatbot_db"
+    # Database (defaults to local/cloud SQLite if no remote MySQL DATABASE_URL is provided)
+    DATABASE_URL: str = "sqlite+aiosqlite:///chatbot.db"
 
     # CORS
     CLIENT_ORIGIN: str = "http://localhost:5173"

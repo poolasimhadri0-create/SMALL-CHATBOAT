@@ -8,10 +8,11 @@ export function getApiBaseUrl() {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL.replace(/\/$/, '');
   }
-  if (import.meta.env.DEV || (typeof window !== 'undefined' && window.location.hostname === 'localhost')) {
+  if (import.meta.env.DEV && typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return 'http://localhost:5000';
   }
-  return '';
+  // Production default: directly connect to deployed Render backend
+  return 'https://small-chatboat.onrender.com';
 }
 
 export async function fetchConversations(search = '') {

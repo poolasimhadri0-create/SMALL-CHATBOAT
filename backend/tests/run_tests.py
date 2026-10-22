@@ -99,12 +99,12 @@ async def run_all_tests():
         assert res.json()["title"] == "New Conversation"
 
         # Rename conversation
-        res = await client.patch(f"/api/conversations/{conv_id}", json={"title": "Hinglish Chat with Gemini"})
+        res = await client.patch(f"/api/conversations/{conv_id}", json={"title": "English Chat with Gemini"})
         assert res.status_code == 200
-        assert res.json()["title"] == "Hinglish Chat with Gemini"
+        assert res.json()["title"] == "English Chat with Gemini"
 
         # Search conversation
-        res_search = await client.get("/api/conversations?q=Hinglish")
+        res_search = await client.get("/api/conversations?q=English")
         assert res_search.status_code == 200
         assert len(res_search.json()) == 1
 

@@ -1,5 +1,5 @@
 -- Database Creation Script for AI Chatbot Backend
--- Supports utf8mb4 for full emoji and multilingual support (Hindi, Hinglish, etc.)
+-- Supports utf8mb4 for full emoji and international text support
 
 CREATE DATABASE IF NOT EXISTS `gemini_chatbot_db` 
     DEFAULT CHARACTER SET utf8mb4 

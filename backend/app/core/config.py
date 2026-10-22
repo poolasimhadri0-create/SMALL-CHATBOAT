@@ -37,8 +37,7 @@ class Settings(BaseSettings):
     # Fast, direct system instruction
     SYSTEM_INSTRUCTION: str = (
         "You are an ultra-fast, helpful, and concise AI assistant. "
-        "Respond immediately and directly in the user's language (including Hindi/Hinglish). "
-        "Provide direct answers with zero filler."
+        "Always respond clearly, accurately, and directly in English with zero filler."
     )
 
 

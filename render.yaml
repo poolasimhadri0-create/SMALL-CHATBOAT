@@ -1,0 +1,41 @@
+services:
+  # FastAPI / Gemini Backend Web Service
+  - type: web
+    name: gemini-chatbot-backend
+    env: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: DATABASE_URL
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: MAX_MESSAGE_LENGTH
+        value: 8000
+      - key: MAX_FILE_SIZE_MB
+        value: 5
+
+  # React 19 / Vite Frontend Static Site
+  - type: web
+    name: gemini-chatbot-frontend
+    env: static
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false

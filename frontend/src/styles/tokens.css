@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0C0E14;
+  --surface: #151924;
+  --elevated: #1C2130;
+  --border: rgba(255, 255, 255, 0.07);
+  --text: #E8EAF0;
+  --muted: #8A91A5;
+  --accent-from: #5B8CFF;
+  --accent-to: #8B5CF6;
+}
+
+.light {
+  --bg: #F6F7FB;
+  --surface: #FFFFFF;
+  --elevated: #FFFFFF;
+  --border: #E6E9F2;
+  --text: #12141C;
+  --muted: #6B7280;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 150, 175, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 150, 175, 0.4);
+}
+
+/* Soft blinking caret for streaming tokens */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.streaming-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  vertical-align: -0.15em;
+  background: linear-gradient(180deg, #5B8CFF 0%, #8B5CF6 100%);
+  margin-left: 2px;
+  animation: blink 0.9s infinite;
+}
+
+/* CSS 3D Orb Avatar (Used in AI message header) */
+.orb-avatar {
+  background: radial-gradient(circle at 35% 30%, #9cbaff 0%, #5B8CFF 40%, #764be4 80%, #3a1c8b 100%);
+  box-shadow: 
+    0 2px 8px rgba(91, 140, 255, 0.35),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.orb-avatar-pulsing {
+  animation: orb-pulse 2s ease-in-out infinite;
+}
+
+@keyframes orb-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(91, 140, 255, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 14px rgba(139, 92, 246, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* 3D Interactive Card Lift & Tilt */
+.card-3d {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+  perspective: 800px;
+}
+
+.card-3d:hover {
+  transform: translateY(-4px) rotateX(2deg) rotateY(-2deg);
+}
+
+/* 3D Send Button */
+.btn-send-3d {
+  background: linear-gradient(135deg, #5B8CFF 0%, #8B5CF6 100%);
+  box-shadow: 0 4px 14px rgba(91, 140, 255, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-send-3d:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(91, 140, 255, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.btn-send-3d:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .streaming-caret,
+  .orb-avatar-pulsing,
+  .card-3d:hover,
+  .btn-send-3d {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

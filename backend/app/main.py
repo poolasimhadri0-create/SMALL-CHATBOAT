@@ -60,10 +60,18 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Request ID tracking middleware
 app.add_middleware(RequestIdMiddleware)
 
-# Strict CORS middleware supporting configured origin and local dev ports
+# CORS middleware supporting configured origin, Render frontend, and local dev ports
+raw_origins = [o.strip() for o in settings.CLIENT_ORIGIN.split(",") if o.strip()]
+raw_origins.extend([
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://small-chatboat-1.onrender.com",
+])
+allowed_origins = list(set(raw_origins))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=list(set([settings.CLIENT_ORIGIN, "http://localhost:5173", "http://127.0.0.1:5173"])),
+    allow_origins=allowed_origins if "*" not in allowed_origins else ["*"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],

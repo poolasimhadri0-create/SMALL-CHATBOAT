@@ -1,4 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.__BACKEND_URL__) ||
+  (import.meta.env.DEV ? 'http://localhost:5000' : '');
 
 export async function fetchConversations(search = '') {
   const url = search.trim()

@@ -20,7 +20,13 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy built frontend assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy custom Nginx configuration with resilient dynamic proxy
+# Default BACKEND_URL fallback for Docker Compose / Render
+ENV BACKEND_URL=http://backend:5000
+
+# Copy template for automatic envsubst by Nginx docker-entrypoint
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+
+# Fallback default configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
